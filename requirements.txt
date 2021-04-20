@@ -1,6 +1,6 @@
 certifi==2020.12.5
 click
-Flask @ file:///home/ktietz/src/ci/flask_1611932660458/work
+Flask
 itsdangerous @ file:///home/ktietz/src/ci/itsdangerous_1611932585308/work
 Jinja2 @ file:///tmp/build/80754af9/jinja2_1612213139570/work
 joblib @ file:///home/conda/feedstock_root/build_artifacts/joblib_1612898609989/work
