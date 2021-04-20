@@ -1,8 +1,3 @@
-name: flask_env
-channels:
-  - conda-forge
-  - defaults
-dependencies:
   - _py-xgboost-mutex=2.0=cpu_0
   - blas=1.0=mkl
   - ca-certificates=2021.4.13=haa95532_1
