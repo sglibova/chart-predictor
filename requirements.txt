@@ -1,5 +1,5 @@
 certifi==2020.12.5
-click @ file:///home/linux1/recipes/ci/click_1610990599742/work
+click
 Flask @ file:///home/ktietz/src/ci/flask_1611932660458/work
 itsdangerous @ file:///home/ktietz/src/ci/itsdangerous_1611932585308/work
 Jinja2 @ file:///tmp/build/80754af9/jinja2_1612213139570/work
