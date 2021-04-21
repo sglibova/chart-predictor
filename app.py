@@ -8,7 +8,6 @@ import os
 
 
 app = Flask(__name__, static_url_path="/static")
-app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 2048000
 app.secret_key = 'key'
 
@@ -29,13 +28,11 @@ def upload_predict():
 
         file = request.files['file']
         verifier = request.form['verifier']
-        # if no file selected, browser submits an empty part without filename
-        if file.filename != '':
-            name = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], name)
-            file.save(file_path)
+        filename = secure_filename(file.filename)
 
-            data = pd.read_csv(file_path)
+        # if no file selected, browser submits an empty part without filename
+        if filename and file.filename != '':
+            data = pd.read_csv(file)
             song_names = data['title']
             feature_values, stamina = extract_feature_values(data, verifier)
             print(data, verifier)  # debugging
