@@ -36,10 +36,13 @@ def upload_predict():
             file.save(file_path)
 
             data = pd.read_csv(file_path)
+            song_names = data['title']
             feature_values, stamina = extract_feature_values(data, verifier)
             print(data, verifier)  # debugging
 
-            prediction = get_prediction(feature_values, stamina)
+            preds = get_prediction(feature_values, stamina)
+            prediction = dict(zip(song_names, preds))
+
             return redirect(url_for("show_results", prediction=prediction))
 
         else:
@@ -53,6 +56,7 @@ def show_results():
 
     # Extract the prediction from the URL params
     prediction = request.args.get("prediction")
+    song_names = request.args.get("song_names")
 
     # prediction = round(float(prediction), 2)
 
