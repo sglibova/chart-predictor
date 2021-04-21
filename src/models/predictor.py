@@ -14,7 +14,7 @@ def get_prediction(feature_values, stamina):
     # We are only making a single prediction, so return the 0-th value
     else:
        predictions=np.around(stam_model.predict(feature_values), 2)
-       return predictions[:10]
+       return predictions
 
 def un_pickle_model():
     """ Load the model from the .pkl file """
