@@ -1,51 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Chart Difficulty Predictor</title>
-    <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <title>Chart Difficulty Rater</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
   </head>
+
+  <style>
+  .jumbotron
+  {background-color: aquamarine;
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+  
+  .container
+  {font-size: larger;}
+
+  </style>
+
   <body>
-    <div class="container">
+    <div class="container-fluid">
       <div class="jumbotron">
-        <h1 class="display-4">Results</h1>
+        <h1 class="display-4" style="text-align: center;"><b>Results</b></h1>
       </div>
       <div class="container">
-        <!-- 
-          This table contains the result as a large number surrounded by smaller
-          text. It uses a table rather than bootstrap rows/cols in order to use
-          the align-middle CSS class
-        -->
-        <table style="width: 100%; align-self: center;">
-          <tbody>
-            <tr>
-              <td class="align-left" style="width: 33%; text-align: right;">
-                Predicted difficulty ratings:
-              </td>
-              <td class="align-left" style="width: 33%; text-align: center; font-size: 3em;">  
-                {{ prediction }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <hr>
         <div class="row">
-          <div class="col" style="text-align: center;">
-            <!-- 
-              Replace this with something relevant, maybe a freshly-generated
-              matplotlib graph?
-            -->
-            <img src="{{ url_for('static', filename='arrow_bounce.gif') }}" 
-              alt="upward sloping chart" width="24" height = "24">
+          <div class="col-sm">
+            Predicted difficulty ratings:
+          </div>
+          <div class="col-sm">
+            {{ prediction }}
           </div>
         </div>
-        <hr>
-        <div class="row">
-          <div class="col" style="text-align: center;">
-            <a href="/">Go back home</a>
-          </div>
-        </div>
-        <hr>
       </div>
     </div>
+    <br>
+    <div class="row">
+      <div class="col" style="text-align: center;">
+        <a href="/">Go Back Home</a>
+        <img src='static/arrow_bounce.gif' alt="bouncing arrow gif" width="24" height = "24">
+      </div>
+      <br>
   </body>
 </html>
