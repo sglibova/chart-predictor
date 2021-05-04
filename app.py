@@ -5,6 +5,7 @@ from src.models.predictor import get_prediction
 from werkzeug.utils import secure_filename
 import pandas as pd
 import os
+from step_parser import batch_analysis
 
 
 app = Flask(__name__, static_url_path="/static")
@@ -32,7 +33,7 @@ def upload_predict():
 
         # if no file selected, browser submits an empty part without filename
         if filename and file.filename != '':
-            data = pd.read_csv(file)
+            data = batch_analysis(file)
             song_names = data['title']
             feature_values, stamina = extract_feature_values(data, verifier)
             print(data, verifier)  # debugging
