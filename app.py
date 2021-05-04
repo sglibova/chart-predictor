@@ -33,7 +33,7 @@ def upload_predict():
 
         # if no file selected, browser submits an empty part without filename
         if filename and file.filename != '':
-            data = batch_analysis(file)
+            data = batch_analysis(file.filename)
             song_names = data['title']
             feature_values, stamina = extract_feature_values(data, verifier)
             print(data, verifier)  # debugging
