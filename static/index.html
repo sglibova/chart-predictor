@@ -15,6 +15,7 @@
 .jumbotron
 {background-color: aquamarine;}
 
+
 </style>
 
 </head>
@@ -40,9 +41,10 @@
     <p>Welcome! This tool will help estimate a difficulty rating for your stepmania charts.<br>
     For now, your data must be in .csv file format - use this <a href="https://github.com/JaceTSM/sm_tools" target="_blank">parser</a> to get one!</p>
   </div>
+
   <h3>Upload your file here:</h3>
               <form method="POST" action="/make_prediction" enctype="multipart/form-data">
-              <p><input type="file" name="file" /></p>
+              <p><input type="file" name="files[]" multiple="true" autocomplete="off" required/></p>
               <p><label for="input-2">Stamina or Tech?</label>
               <select id="input-2" name="verifier">
                 <option value="0">Tech</option>

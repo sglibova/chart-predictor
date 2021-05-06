@@ -1,6 +1,7 @@
 from flask import Flask, flash, send_from_directory, render_template, request, redirect, url_for
+from flask_dropzone import Dropzone
 from waitress import serve
-from src.utils import extract_feature_values
+from src.utils import allowed_file, extract_feature_values
 from src.models.predictor import get_prediction
 from werkzeug.utils import secure_filename
 import pandas as pd
@@ -9,9 +10,17 @@ from step_parser import batch_analysis
 
 
 app = Flask(__name__, static_url_path="/static")
-app.config['MAX_CONTENT_LENGTH'] = 2048000
-app.secret_key = 'key'
 
+app.secret_key = 'key'
+app.config['MAX_CONTENT_LENGTH'] = 2048000
+
+#file upload path
+path = os.getcwd()
+UPLOAD_FOLDER = os.path.join(path, 'uploads')
+if not os.path.isdir(UPLOAD_FOLDER):
+    os.mkdir(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route("/")
 def index():
@@ -23,23 +32,37 @@ def index():
 def upload_predict():
     if request.method == 'POST':
         # check if the post request has the file part
-        if 'file' not in request.files:
+        if 'files[]' not in request.files:
             flash('No file part')
             return redirect(url_for("index"))
 
-        file = request.files['file']
+        files = request.files.getlist('files[]')
+
+        for file in files:
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+
+
         verifier = request.form['verifier']
-        filename = secure_filename(file.filename)
+        
 
         # if no file selected, browser submits an empty part without filename
-        if filename and file.filename != '':
-            data = batch_analysis(file.filename)
+        if filename:
+            data = batch_analysis(UPLOAD_FOLDER)
+            print(data.columns)
+            print(len(data))
             song_names = data['title']
             feature_values, stamina = extract_feature_values(data, verifier)
-            print(data, verifier)  # debugging
 
             preds = get_prediction(feature_values, stamina)
             prediction = dict(zip(song_names, preds))
+
+            for file in files:
+                name = "_".join(file.filename.split())
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], name)
+                os.remove(file_path)
 
             return redirect(url_for("show_results", prediction=prediction))
 
@@ -56,7 +79,8 @@ def show_results():
     prediction = request.args.get("prediction")
     song_names = request.args.get("song_names")
 
-    # prediction = round(float(prediction), 2)
+    #remove uploads directory
+    os.rmdir(UPLOAD_FOLDER)
 
     # Return the results pge
     return render_template("results.html", prediction=prediction)

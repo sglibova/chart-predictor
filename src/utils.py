@@ -3,7 +3,7 @@ import numpy as np
 from src.data_cleaning import data_cleaner
 
 
-ALLOWED_EXTENSIONS=['.csv']
+ALLOWED_EXTENSIONS = set(['sm', 'ssc'])
 
 def allowed_file(filename):
     return '.' in filename and \
