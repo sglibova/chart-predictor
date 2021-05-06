@@ -1,5 +1,4 @@
 from flask import Flask, flash, send_from_directory, render_template, request, redirect, url_for
-from flask_dropzone import Dropzone
 from waitress import serve
 from src.utils import allowed_file, extract_feature_values
 from src.models.predictor import get_prediction
@@ -52,7 +51,7 @@ def upload_predict():
         if filename:
             data = batch_analysis(UPLOAD_FOLDER)
             print(data.columns)
-            print(len(data))
+            print(data)
             song_names = data['title']
             feature_values, stamina = extract_feature_values(data, verifier)
 
