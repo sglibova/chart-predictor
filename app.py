@@ -11,13 +11,13 @@ from step_parser import batch_analysis
 app = Flask(__name__, static_url_path="/static")
 
 app.secret_key = 'key'
+
+#max file size
 app.config['MAX_CONTENT_LENGTH'] = 2048000
 
 #file upload path
 path = os.getcwd()
 UPLOAD_FOLDER = os.path.join(path, 'uploads')
-if not os.path.isdir(UPLOAD_FOLDER):
-    os.mkdir(UPLOAD_FOLDER)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -36,39 +36,36 @@ def upload_predict():
             return redirect(url_for("index"))
 
         files = request.files.getlist('files[]')
-
+        #upload files to 'uploads' folder
         for file in files:
+            if not os.path.isdir(UPLOAD_FOLDER):
+                os.mkdir(UPLOAD_FOLDER)
+                
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
 
-
+        #user input of stamina or tech
         verifier = request.form['verifier']
         
 
         # if no file selected, browser submits an empty part without filename
-        if filename:
-            data = batch_analysis(UPLOAD_FOLDER)
-            print(data.columns)
-            print(data)
-            song_names = data['title']
-            feature_values, stamina = extract_feature_values(data, verifier)
+        data = batch_analysis(UPLOAD_FOLDER)
+        print(data.columns)
+        print(data)
+        song_names = data['title']
+        feature_values, stamina = extract_feature_values(data, verifier)
 
-            preds = get_prediction(feature_values, stamina)
-            prediction = dict(zip(song_names, preds))
+        preds = get_prediction(feature_values, stamina)
+        prediction = dict(zip(song_names, preds))
 
-            for file in files:
-                name = "_".join(file.filename.split())
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], name)
-                os.remove(file_path)
+        for file in files:
+            name = "_".join(file.filename.split())
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], name)
+            os.remove(file_path)
 
-            return redirect(url_for("show_results", prediction=prediction))
-
-        else:
-            flash('No file selected! Try again.')
-            return redirect(url_for("index"))
-
+        return redirect(url_for("show_results", prediction=prediction))
 
 @app.route("/show_results")
 def show_results():
