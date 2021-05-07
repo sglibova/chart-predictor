@@ -5,7 +5,11 @@ from src.models.predictor import get_prediction
 from werkzeug.utils import secure_filename
 import pandas as pd
 import os
+import re
 from step_parser import batch_analysis
+
+import warnings
+warnings.filterwarnings("ignore")
 
 
 app = Flask(__name__, static_url_path="/static")
@@ -40,7 +44,7 @@ def upload_predict():
         for file in files:
             if not os.path.isdir(UPLOAD_FOLDER):
                 os.mkdir(UPLOAD_FOLDER)
-                
+
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -48,38 +52,49 @@ def upload_predict():
 
         #user input of stamina or tech
         verifier = request.form['verifier']
-        
-
-        # if no file selected, browser submits an empty part without filename
+    
+        #run sm_tools batch_analysis to generate a dataframe of song features
         data = batch_analysis(UPLOAD_FOLDER)
-        print(data.columns)
-        print(data)
-        song_names = data['title']
+        song_name = data['title']
+        difficulty = data['difficulty']
+
         feature_values, stamina = extract_feature_values(data, verifier)
 
-        preds = get_prediction(feature_values, stamina)
-        prediction = dict(zip(song_names, preds))
+        prediction = get_prediction(feature_values, stamina)
+        #prediction = dict(zip(song_names, preds))
 
         for file in files:
             name = "_".join(file.filename.split())
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], name)
             os.remove(file_path)
 
-        return redirect(url_for("show_results", prediction=prediction))
+        return redirect(url_for("show_results", song_name=song_name, difficulty=difficulty, prediction=prediction))
 
 @app.route("/show_results")
 def show_results():
     """ Display the results page with the provided prediction """
 
-    # Extract the prediction from the URL params
-    prediction = request.args.get("prediction")
-    song_names = request.args.get("song_names")
+    # Extract the names, difficulties, and predictions from the URL params
+    # string formatting
+    song_name = request.args.get("song_name").split('Name')[0]
+    song_list = re.findall('[A-Z]\w+\d*\D+', song_name)
+    
+    #string formatting
+    difficulty = request.args.get("difficulty").split('Name')[0]
+    difficulty_list = re.findall('[A-Z]\w+\d*\D+', difficulty)
+
+    #string formatting
+    prediction = request.args.get("prediction").strip('[]')
+    prediction_list = prediction.split()
+
+    #zip everything into a list
+    zipped = list(zip(song_name, difficulty, prediction))
 
     #remove uploads directory
     os.rmdir(UPLOAD_FOLDER)
 
     # Return the results pge
-    return render_template("results.html", prediction=prediction)
+    return render_template("results.html", song_list=song_list, difficulty_list=difficulty_list, prediction_list=prediction_list)
 
 
 if __name__ == "__main__":

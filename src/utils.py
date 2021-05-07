@@ -32,6 +32,7 @@ def extract_feature_values(data, verifier):
         feature_values=data_cleaner(data, is_stamina=False)
         feature_values=feature_values[tech_features]
         feature_values['stream_log_transform']=np.where(feature_values['stream_total'] > 0, np.log(feature_values['stream_total']), feature_values['stream_total'])
+        print(feature_values, stamina)
         return feature_values, stamina
     #else, the user selected stamina    
     else:
@@ -39,5 +40,6 @@ def extract_feature_values(data, verifier):
         feature_values=data_cleaner(data, is_stamina=True)
         feature_values=feature_values[stam_features]
         feature_values['stream_log_transform']=np.where(feature_values['stream_total'] > 0, np.log(feature_values['stream_total']), feature_values['stream_total'])
+        print(feature_values, stamina)
         return feature_values, stamina
 

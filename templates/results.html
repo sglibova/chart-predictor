@@ -32,7 +32,19 @@
             Predicted difficulty ratings:
           </div>
           <div class="col-sm">
-            {{ prediction }}
+            {% for song in song_list %}
+            {{ song }}<br>
+            {% endfor %}<br>
+          </div>
+          <div class="col-sm">
+            {% for difficulty in difficulty_list %}
+            {{ difficulty }}<br>
+            {% endfor %}<br>
+          </div>
+          <div class="col-sm">  
+            {% for prediction in prediction_list %}
+            {{ prediction }}<br>
+            {% endfor %}<br>
           </div>
         </div>
       </div>

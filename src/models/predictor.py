@@ -10,8 +10,7 @@ def get_prediction(feature_values, stamina):
     #Given a boolean for whether the data is stamina data or not, predicts using one of the two models
     if not stamina:
         predictions=np.around(tech_model.predict(feature_values), 2)
-        return predictions[:10]
-    # We are only making a single prediction, so return the 0-th value
+        return predictions
     else:
        predictions=np.around(stam_model.predict(feature_values), 2)
        return predictions
