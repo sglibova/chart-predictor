@@ -16,15 +16,20 @@ def data_cleaner(df, is_stamina = False):
         '''
     tech_df = pd.DataFrame([])
     stam_df = pd.DataFrame([])
-    ordered_features = ['title', 'artist', 'song_seconds', 'step_count', 'measure_count', 'bpm_weighted_avg', 'bpm_max', 'bpm_min',\
+    tech_features=['song_seconds', 'step_count', 'measure_count', 'bpm_weighted_avg', 'bpm_max', 'bpm_min',\
+                    'bpm_mode', 'bpm_change_count', 'song_nps', 'nps_per_measure_max', 'nps_per_measure_avg', 'nps_per_measure_median',\
+                    'nps_per_measure_std', 'nps_per_measure_mode', 'jumps', 'hands', 'quads', 'holds', 'mines', 'rolls',\
+                    'crossovers', 'footswitches', 'crossover_footswitches', 'jacks', 'invalid_crossovers', 'stop_count',\
+                    'stream_total']
+
+    stam_features=['song_seconds', 'step_count', 'measure_count', 'bpm_weighted_avg', 'bpm_max', 'bpm_min',\
                     'bpm_mode', 'bpm_change_count', 'song_nps', 'nps_per_measure_max', 'nps_per_measure_avg', 'nps_per_measure_median',\
                     'nps_per_measure_std', 'nps_per_measure_mode', 'jumps', 'hands', 'quads', 'holds', 'mines', 'rolls',\
                     'crossovers', 'footswitches', 'crossover_footswitches', 'jacks', 'invalid_crossovers', 'stop_count',\
                     'stream_total', 'stream_count', 'stream_size_max', 'stream_size_avg', 'stream_size_std', 'break_count',\
-                    'break_size_max', 'break_size_avg', 'break_total', 'break_size_std', 'difficulty', 'rating']
-    
+                    'break_size_max', 'break_size_avg', 'break_total', 'break_size_std']
     if is_stamina:
-        stam_df = df[ordered_features]
+        stam_df = df[stam_features]
         
         '''Replace any negative bpm weighted averages with the median value'''
         bpm_median = stam_df.bpm_weighted_avg.median()
@@ -48,19 +53,12 @@ def data_cleaner(df, is_stamina = False):
         return stam_df
 
     else:
-        tech_df = df[ordered_features]
+        tech_df = df[tech_features]
         print(f"Initialized Tech DataFrame with {len(tech_df)} rows.\n")
 
         '''Fill any negative BPM weighted average values with the median'''
         weighted_bpm_median = tech_df.bpm_weighted_avg.median()
         tech_df['bpm_weighted_avg'] = np.where(tech_df['bpm_weighted_avg'] < 0, weighted_bpm_median, tech_df['bpm_weighted_avg'])
-
-        '''The following columns will be dropped entirely because they are not particularly useful for Tech Data'''
-
-        cols_to_drop = ['stream_count', 'stream_size_max', 'stream_size_avg', 'stream_size_std', 'break_count', 'break_size_max',\
-               'break_size_avg', 'break_total', 'break_size_std']
-
-        tech_df = tech_df.drop(columns = cols_to_drop, axis = 1)
         
         return tech_df
 
