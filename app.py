@@ -41,6 +41,13 @@ def upload_predict():
 
         files = request.files.getlist('files[]')
         #upload files to 'uploads' folder
+        
+        if os.path.isdir(UPLOAD_FOLDER):
+            directories = os.listdir(UPLOAD_FOLDER)
+            if len(directories) != 0:
+                for directory in directories:
+                    os.remove(directory)
+
         for file in files:
             if not os.path.isdir(UPLOAD_FOLDER):
                 os.mkdir(UPLOAD_FOLDER)

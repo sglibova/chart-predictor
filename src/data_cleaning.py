@@ -4,7 +4,7 @@ import numpy as np
 
 def data_cleaner(df, is_stamina = False):
 
-    '''  
+    '''
     For technical data, removes the following features:
     'stream_count', 'stream_size_max', 'stream_size_avg', 'stream_size_std', 'break_count', 'break_size_max',
     'break_size_avg', 'break_total', 'break_size_std'
