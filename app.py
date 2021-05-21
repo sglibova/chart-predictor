@@ -5,6 +5,7 @@ from src.models.predictor import get_prediction
 from werkzeug.utils import secure_filename
 import pandas as pd
 import os
+import shutil
 import re
 from step_parser import batch_analysis
 
@@ -39,14 +40,20 @@ def upload_predict():
             flash('No file part')
             return redirect(url_for("index"))
 
+    
+    folder = UPLOAD_FOLDER
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))   
+
         files = request.files.getlist('files[]')
         #upload files to 'uploads' folder
-        
-        if os.path.isdir(UPLOAD_FOLDER):
-            directories = os.listdir(UPLOAD_FOLDER)
-            if len(directories) != 0:
-                for directory in directories:
-                    os.remove(directory)
 
         for file in files:
             if not os.path.isdir(UPLOAD_FOLDER):
@@ -98,6 +105,12 @@ def show_results():
     zipped = list(zip(song_name, difficulty, prediction))
 
     #remove uploads directory
+    directories = os.listdir(UPLOAD_FOLDER)
+    if len(directories) != 0:
+        for directory in directories:
+            if os.path.isfile(directory):
+                os.remove(directory)
+
     os.rmdir(UPLOAD_FOLDER)
 
     # Return the results pge
