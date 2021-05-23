@@ -40,6 +40,7 @@ def upload_predict():
             flash('No file part')
             return redirect(url_for("index"))
 
+    # if an uploads folder doesn't exist (it probably won't), make a folder
     if not os.path.isdir(UPLOAD_FOLDER):
         os.mkdir(UPLOAD_FOLDER)
 
@@ -57,7 +58,6 @@ def upload_predict():
     # upload files to 'uploads' folder
     for file in files:
         if file and allowed_file(file.filename):
-            print(file)
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
@@ -74,6 +74,7 @@ def upload_predict():
 
     prediction = get_prediction(feature_values, stamina)
 
+    # remove files from uploads folder so that it can be deleted after results
     for file in files:
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
