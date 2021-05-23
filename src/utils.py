@@ -15,6 +15,7 @@ def extract_feature_values(data, verifier):
     if verifier == str(0):
         stamina = False
         feature_values = data_cleaner(data, is_stamina=False)
+        # adding in 'log transform' feature to match the expectations of the model
         feature_values['stream_log_transform'] = np.where(feature_values['stream_total'] > 0,
                                                           np.log(feature_values['stream_total']),
                                                           feature_values['stream_total'])
@@ -23,6 +24,7 @@ def extract_feature_values(data, verifier):
     else:
         stamina = True
         feature_values = data_cleaner(data, is_stamina=True)
+        # adding in 'log transform' feature to match the expectations of the model
         feature_values['stream_log_transform'] = np.where(feature_values['stream_total'] > 0,
                                                           np.log(feature_values['stream_total']),
                                                           feature_values['stream_total'])

@@ -46,7 +46,6 @@ def data_cleaner(df, is_stamina=False):
                      'break_total', 'break_size_std']
     if is_stamina:
         stam_df = df[stam_features]
-        
         # replace any negative bpm weighted averages with the median value
         bpm_median = stam_df.bpm_weighted_avg.median()
         stam_df['bpm_weighted_avg'] = np.where(stam_df['bpm_weighted_avg'] < 0,
@@ -60,15 +59,42 @@ def data_cleaner(df, is_stamina=False):
             'break_size_avg', 'break_total', 'break_size_std']
         '''
         stam_df = stam_df.fillna(0)
-        stam_df.stream_count = stam_df.stream_count.replace(0, stam_df.stream_count.median())
-        stam_df.stream_size_max = stam_df.stream_size_max.replace(0, stam_df.stream_size_max.median())
-        stam_df.stream_size_avg = stam_df.stream_size_avg.replace(0, stam_df.stream_size_avg.median())
-        stam_df.stream_size_std = stam_df.stream_size_std.replace(0, stam_df.stream_size_std.median())
-        stam_df.break_count = stam_df.break_count.replace(0, stam_df.break_count.median())
-        stam_df.break_size_max = stam_df.break_size_max.replace(0, stam_df.break_size_max.median())
-        stam_df.break_size_avg = stam_df.break_size_avg.replace(0, stam_df.break_size_avg.median())
-        stam_df.break_total = stam_df.break_total.replace(0, stam_df.break_total.median())
-        stam_df.break_size_std = stam_df.break_size_std.replace(0, stam_df.break_size_std.median())
+        stam_df.stream_count = stam_df.stream_count.replace(0,
+                                                            stam_df.
+                                                            stream_count
+                                                            .median())
+        stam_df.stream_size_max = stam_df.stream_size_max.replace(0,
+                                                                  stam_df.
+                                                                  stream_size_max
+                                                                  .median())
+        stam_df.stream_size_avg = stam_df.stream_size_avg.replace(0,
+                                                                  stam_df.
+                                                                  stream_size_avg
+                                                                  .median())
+        stam_df.stream_size_std = stam_df.stream_size_std.replace(0,
+                                                                  stam_df.
+                                                                  stream_size_std
+                                                                  .median())
+        stam_df.break_count = stam_df.break_count.replace(0,
+                                                          stam_df.
+                                                          break_count
+                                                          .median())
+        stam_df.break_size_max = stam_df.break_size_max.replace(0,
+                                                                stam_df.
+                                                                break_size_max
+                                                                .median())
+        stam_df.break_size_avg = stam_df.break_size_avg.replace(0,
+                                                                stam_df.
+                                                                break_size_avg
+                                                                .median())
+        stam_df.break_total = stam_df.break_total.replace(0,
+                                                          stam_df.
+                                                          break_total
+                                                          .median())
+        stam_df.break_size_std = stam_df.break_size_std.replace(0,
+                                                                stam_df.
+                                                                break_size_std
+                                                                .median())
 
         return stam_df
 

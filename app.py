@@ -57,6 +57,7 @@ def upload_predict():
     # upload files to 'uploads' folder
     for file in files:
         if file and allowed_file(file.filename):
+            print(file)
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
@@ -74,8 +75,10 @@ def upload_predict():
     prediction = get_prediction(feature_values, stamina)
 
     for file in files:
+        filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        os.remove(file_path)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
 
     return redirect(url_for("show_results", song_name=song_name,
                             difficulty=difficulty, prediction=prediction))
@@ -89,7 +92,7 @@ def show_results():
     # string formatting
     song_name = request.args.get("song_name").split('Name')[0]
     song_list = re.findall('[A-Z]\w+\d*\D+', song_name)
-    
+
     # string formatting
     difficulty = request.args.get("difficulty").split('Name')[0]
     difficulty_list = re.findall('[A-Z]\w+\d*\D+', difficulty)
@@ -99,12 +102,6 @@ def show_results():
     prediction_list = prediction.split()
 
     # remove uploads directory
-    filenames = os.listdir(UPLOAD_FOLDER)
-    if len(filenames) != 0:
-        for filename in filenames:
-            if os.path.isfile(filename):
-                os.remove(filename)
-
     os.rmdir(UPLOAD_FOLDER)
 
     # Return the results pge
