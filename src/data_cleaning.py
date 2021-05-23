@@ -2,41 +2,61 @@ import pandas as pd
 import numpy as np
 
 
-def data_cleaner(df, is_stamina = False):
+def data_cleaner(df, is_stamina=False):
 
     '''
     For technical data, removes the following features:
-    'stream_count', 'stream_size_max', 'stream_size_avg', 'stream_size_std', 'break_count', 'break_size_max',
+
+    'stream_count', 'stream_size_max', 'stream_size_avg',
+    'stream_size_std', 'break_count', 'break_size_max',
     'break_size_avg', 'break_total', 'break_size_std'
 
-    Fills NaN values with median for stamina data (same features as listed above):
-    'stream_count', 'stream_size_max', 'stream_size_avg', 'stream_size_std', 'break_count', 'break_size_max', 
+    Fills NaN values with median for stamina data
+    (same features as listed above):
+
+    'stream_count', 'stream_size_max', 'stream_size_avg',
+    'stream_size_std', 'break_count', 'break_size_max',
     'break_size_avg', 'break_total', 'break_size_std'
-        
-        '''
+    '''
+
     tech_df = pd.DataFrame([])
     stam_df = pd.DataFrame([])
-    tech_features=['song_seconds', 'step_count', 'measure_count', 'bpm_weighted_avg', 'bpm_max', 'bpm_min',\
-                    'bpm_mode', 'bpm_change_count', 'song_nps', 'nps_per_measure_max', 'nps_per_measure_avg', 'nps_per_measure_median',\
-                    'nps_per_measure_std', 'nps_per_measure_mode', 'jumps', 'hands', 'quads', 'holds', 'mines', 'rolls',\
-                    'crossovers', 'footswitches', 'crossover_footswitches', 'jacks', 'invalid_crossovers', 'stop_count',\
-                    'stream_total']
+    tech_features = ['song_seconds', 'step_count', 'measure_count',
+                     'bpm_weighted_avg', 'bpm_max', 'bpm_min',
+                     'bpm_mode', 'bpm_change_count', 'song_nps',
+                     'nps_per_measure_max', 'nps_per_measure_avg',
+                     'nps_per_measure_median', 'nps_per_measure_std',
+                     'nps_per_measure_mode', 'jumps', 'hands',
+                     'quads', 'holds', 'mines', 'rolls', 'crossovers',
+                     'footswitches', 'crossover_footswitches', 'jacks',
+                     'invalid_crossovers', 'stop_count', 'stream_total']
 
-    stam_features=['song_seconds', 'step_count', 'measure_count', 'bpm_weighted_avg', 'bpm_max', 'bpm_min',\
-                    'bpm_mode', 'bpm_change_count', 'song_nps', 'nps_per_measure_max', 'nps_per_measure_avg', 'nps_per_measure_median',\
-                    'nps_per_measure_std', 'nps_per_measure_mode', 'jumps', 'hands', 'quads', 'holds', 'mines', 'rolls',\
-                    'crossovers', 'footswitches', 'crossover_footswitches', 'jacks', 'invalid_crossovers', 'stop_count',\
-                    'stream_total', 'stream_count', 'stream_size_max', 'stream_size_avg', 'stream_size_std', 'break_count',\
-                    'break_size_max', 'break_size_avg', 'break_total', 'break_size_std']
+    stam_features = ['song_seconds', 'step_count', 'measure_count',
+                     'bpm_weighted_avg', 'bpm_max', 'bpm_min',
+                     'bpm_mode', 'bpm_change_count', 'song_nps',
+                     'nps_per_measure_max', 'nps_per_measure_avg',
+                     'nps_per_measure_median', 'nps_per_measure_std',
+                     'nps_per_measure_mode', 'jumps', 'hands',
+                     'quads', 'holds', 'mines', 'rolls', 'crossovers',
+                     'footswitches', 'crossover_footswitches',
+                     'jacks', 'invalid_crossovers', 'stop_count',
+                     'stream_total', 'stream_count', 'stream_size_max',
+                     'stream_size_avg', 'stream_size_std',
+                     'break_count', 'break_size_max', 'break_size_avg',
+                     'break_total', 'break_size_std']
     if is_stamina:
         stam_df = df[stam_features]
         
-        '''Replace any negative bpm weighted averages with the median value'''
+        # replace any negative bpm weighted averages with the median value
         bpm_median = stam_df.bpm_weighted_avg.median()
-        stam_df['bpm_weighted_avg'] = np.where(stam_df['bpm_weighted_avg'] < 0 , bpm_median, stam_df['bpm_weighted_avg'])
+        stam_df['bpm_weighted_avg'] = np.where(stam_df['bpm_weighted_avg'] < 0,
+                                               bpm_median,
+                                               stam_df['bpm_weighted_avg'])
 
-        '''Because these features are valuable to stamina data, let's fill NaN values with the median:
-            ['stream_count', 'stream_size_max', 'stream_size_avg', 'stream_size_std', 'break_count', 'break_size_max', \
+        '''Because these features are valuable to stamina data,
+           let's fill NaN values with the median:
+            ['stream_count', 'stream_size_max', 'stream_size_avg',
+            'stream_size_std', 'break_count', 'break_size_max',
             'break_size_avg', 'break_total', 'break_size_std']
         '''
         stam_df = stam_df.fillna(0)
@@ -58,8 +78,8 @@ def data_cleaner(df, is_stamina = False):
 
         '''Fill any negative BPM weighted average values with the median'''
         weighted_bpm_median = tech_df.bpm_weighted_avg.median()
-        tech_df['bpm_weighted_avg'] = np.where(tech_df['bpm_weighted_avg'] < 0, weighted_bpm_median, tech_df['bpm_weighted_avg'])
-        
+        tech_df['bpm_weighted_avg'] = np.where(tech_df['bpm_weighted_avg'] < 0,
+                                               weighted_bpm_median,
+                                               tech_df['bpm_weighted_avg'])
+
         return tech_df
-
-
