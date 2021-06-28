@@ -18,6 +18,9 @@ app.secret_key = 'key'
 
 # max file size
 app.config['MAX_CONTENT_LENGTH'] = 2048000
+app.config['ALLOWED_EXTENSIONS'] = set(['sm', 'ssc', 'dwi'])
+
+
 
 # file upload path
 path = os.getcwd()

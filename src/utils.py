@@ -1,7 +1,7 @@
 from src.data_cleaning import data_cleaner
 import numpy as np
 
-ALLOWED_EXTENSIONS = set(['sm', 'ssc'])
+ALLOWED_EXTENSIONS = set(['sm', 'ssc', 'dwi'])
 
 
 def allowed_file(filename):
